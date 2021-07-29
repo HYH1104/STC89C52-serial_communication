@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"串口收发.obj" 
+TO "串口收发" 
+RAMSIZE(256) 

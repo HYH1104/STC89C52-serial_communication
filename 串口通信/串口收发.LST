@@ -1,0 +1,69 @@
+C51 COMPILER V9.57.0.0   ________                                                          04/28/2021 14:57:32 PAGE 1   
+
+
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE ________
+OBJECT MODULE PLACED IN 串口收发.OBJ
+COMPILER INVOKED BY: D:\Keil uvision5\C51\BIN\C51.EXE 串口收发.c OPTIMIZE(8,SPEED) TABS(2)
+
+line level    source
+
+   1          #include <REG52.H>
+   2          sbit LED = P1^0;
+   3          sbit key = P3^3;
+   4          unsigned char UART_buff;
+   5          bit New_rec = 0, Send_ed = 1, Money = 0;
+   6          //----------------------------------------------
+   7          void main (void)
+   8          {
+   9   1          SCON = 0x50;   //串口方式1, 8-n-1, 允许接收.
+  10   1          TMOD = 0x20;   //T1方式2
+  11   1          TH1 = 0xFD;    //[url=]//9600bps@11.0592MHz[/url]
+  12   1          TL1 = 0xFD;
+  13   1          TR1 = 1;                        
+  14   1          ES  = 1;       //开中断.
+  15   1          EA  = 1;
+  16   1      while(1)  { 
+  17   2            SBUF = '1'; //那就发送
+  18   2          }
+  19   1            
+  20   1      //      if ((New_rec == 1) && (Send_ed == 1))  {  //如果收到新数据及发送完毕
+  21   1      //        SBUF = UART_buff; //那就发送.
+  22   1      //        New_rec = 0;
+  23   1      //        Send_ed = 0;
+  24   1      //        break;
+  25   1      //    }
+  26   1            }
+  27          
+  28          //----------------------------------------------
+  29          void ser_int (void) interrupt 4 
+  30          {
+  31   1          if(RI == 1) {  //如果收到.
+  32   2            RI = 0;      //清除标志.
+  33   2            New_rec = 1;
+  34   2            UART_buff = SBUF;  //接收.
+  35   2            if(UART_buff == '1')  LED = 1;
+  36   2            if(UART_buff == '0')  LED = 0;
+  37   2            if(UART_buff == '$')  Money = 1;
+  38   2          }
+  39   1          else  {        //如果送毕.
+  40   2            TI = 0;      //清除标志.
+  41   2            Send_ed = 1;
+  42   2          }
+  43   1      } 
+  44          //----------------------------------------------
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     69    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      3    ----
+END OF MODULE INFORMATION.
+
+C51 COMPILER V9.57.0.0   ________                                                          04/28/2021 14:57:32 PAGE 2   
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
